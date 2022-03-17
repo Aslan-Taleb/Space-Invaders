@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import time
+
 class Alien(object):
     image_alien = None
     image_width = None
@@ -37,10 +38,6 @@ class Fleet(object):
         self.alien_y_delta = 15
         self.alien_width = None
         self.alien_id = []
-        self.explo = 0
-        self.location_explo = None
-        self.score = 0
-        self.affichage_score = None
         
     def install_in(self, canvas):
         alien = Alien()
@@ -117,43 +114,35 @@ class Game():
         self.fleet = Fleet() 
         self.defender = Defender()
         self.bullet = Bullet(self.defender)
-        self.width = 1280
-        self.height = 960
+        self.width = 800
+        self.height = 600
         self.canvas = tk.Canvas(self.frame, width=self.width,height=self.height , bg = "black")
         self.canvas.pack()
         self.defender.install_in(self.canvas)
         self.fleet.install_in(self.canvas)
         self.fleet_position_x1 = 0
         self.fleet_position_x2 = (self.fleet.alien_width + self.fleet.alien_x_delta) * self.fleet.aliens_columns
-        self.dx= 20         #de combien bouge droite gauche  fleet
-        self.dy = 1         #de combien bouge bas fleet
+        self.dx= 20
+        self.dy = 0
         self.fin = 0
         #self.pim = tk.PhotoImage(file='background.gif')
         #self.canvas.create_image(0,0,image=self.pim, tags="image")
         
     def keypress(self,event):
-        if (self.fin==0):
-            if event.keysym == 'Left':
-                self.defender.move_in(self.canvas,-self.defender.move_delta)
-            elif event.keysym == 'Right':
-                self.defender.move_in(self.canvas,self.defender.move_delta)   
-            elif event.keysym == 'space':
-                self.defender.fire(self.canvas)
+        if event.keysym == 'Left':
+            self.defender.move_in(self.canvas,-self.defender.move_delta)
+        elif event.keysym == 'Right':
+            self.defender.move_in(self.canvas,self.defender.move_delta)   
+        elif event.keysym == 'space':
+            self.defender.fire(self.canvas)
             
     def animation(self):
-        if (self.fin==0):
             self.move_bullets()
-            self.canvas.after(10, self.animation)
-    def animation_fleet(self):
-        if (self.fin==0):
             self.move_aliens_fleet()
-            self.canvas.after(100,self.animation_fleet)
-        
+            self.canvas.after(300, self.animation)
             
     def start_animation(self): # lancement install 
         self.canvas.after(10,self.animation)
-        self.canvas.after(10,self.animation_fleet)
-        
         
     def move_bullets(self):
         for bullet in self.defender.fired_bullets:
@@ -170,9 +159,9 @@ class Game():
         self.fleet_position_x1 = self.fleet_position_x1 + self.dx
         self.fleet_position_x2= self.fleet_position_x2 + self.dx
         if(self.fleet_position_x1<=(0 - self.fleet.aliens_columns - (2*self.fleet.alien_x_delta) - 1) or self.fleet_position_x2>= (self.width - self.fleet.aliens_columns*self.fleet.alien_x_delta)):
-                self.dx = -self.dx 
-                self.dy = self.dy+ 0.05     #descend de 0.05
-                target = self.canvas.find_overlapping(0, (self.height - self.defender.height), self.width, self.height)
+                self.dx = -self.dx
+                self.dy = self.dy+ 0.05
+                target = self.canvas.find_overlapping(0, (self.height - self.defender.height - 20), self.width, self.height)
                 if (len(target)>=2):
                     self.canvas.create_text(450, 350,font=("Purisa", 18), text='Fin du jeu vous avez perdu !', fill='white')
                     self.fin = 1
