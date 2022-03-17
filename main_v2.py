@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import time
+
 class Alien(object):
     image_alien = None
     image_width = None
@@ -25,22 +26,23 @@ class Alien(object):
     def touched_by(self, canvas, bullet):
         pass
     
-    def move_in(self, canvas, dx, dy):
-        canvas.move(self.id, dx, dy)
+    def move_in(self, canvas, horizontale, verticale):
+        canvas.move(self.id, horizontale, verticale)
+    def get_x(self, canvas) :
+        return canvas.coords(self.id)[0]
+
+    def get_y(self, canvas) :
+        return canvas.coords(self.id)[1]
         
 class Fleet(object):
     def __init__(self):
-        self.aliens_lines = 5
-        self.aliens_columns = 10
+        self.aliens_lines = 3
+        self.aliens_columns = 6
         self.aliens_inner_gap = 20
         self.alien_x_delta = 5
         self.alien_y_delta = 15
         self.alien_width = None
         self.alien_id = []
-        self.explo = 0
-        self.location_explo = None
-        self.score = 0
-        self.affichage_score = None
         
     def install_in(self, canvas):
         alien = Alien()
@@ -117,16 +119,16 @@ class Game():
         self.fleet = Fleet() 
         self.defender = Defender()
         self.bullet = Bullet(self.defender)
-        self.width = 1280
-        self.height = 960
+        self.width = 800
+        self.height = 600
         self.canvas = tk.Canvas(self.frame, width=self.width,height=self.height , bg = "black")
         self.canvas.pack()
         self.defender.install_in(self.canvas)
         self.fleet.install_in(self.canvas)
         self.fleet_position_x1 = 0
         self.fleet_position_x2 = (self.fleet.alien_width + self.fleet.alien_x_delta) * self.fleet.aliens_columns
-        self.dx= 20         #de combien bouge droite gauche  fleet
-        self.dy = 1         #de combien bouge bas fleet
+        self.horizontale= 5        #de combien bouge droite gauche  fleet
+        self.verticale = 0         #de combien bouge bas fleet
         self.fin = 0
         #self.pim = tk.PhotoImage(file='background.gif')
         #self.canvas.create_image(0,0,image=self.pim, tags="image")
@@ -143,16 +145,11 @@ class Game():
     def animation(self):
         if (self.fin==0):
             self.move_bullets()
-            self.canvas.after(10, self.animation)
-    def animation_fleet(self):
-        if (self.fin==0):
             self.move_aliens_fleet()
-            self.canvas.after(100,self.animation_fleet)
-        
+            self.canvas.after(50,self.animation)
             
     def start_animation(self): # lancement install 
-        self.canvas.after(10,self.animation)
-        self.canvas.after(10,self.animation_fleet)
+        self.canvas.after(16,self.animation)
         
         
     def move_bullets(self):
@@ -165,26 +162,32 @@ class Game():
                 print("Une balle a etait enlevé")
                 
     def move_aliens_fleet(self):
-        for fleet in self.fleet.alien_id:
-            fleet.move_in(self.canvas, self.dx, self.dy)
-        self.fleet_position_x1 = self.fleet_position_x1 + self.dx
-        self.fleet_position_x2= self.fleet_position_x2 + self.dx
-        if(self.fleet_position_x1<=(0 - self.fleet.aliens_columns - (2*self.fleet.alien_x_delta) - 1) or self.fleet_position_x2>= (self.width - self.fleet.aliens_columns*self.fleet.alien_x_delta)):
-                self.dx = -self.dx 
-                self.dy = self.dy+ 0.05     #descend de 0.05
-                target = self.canvas.find_overlapping(0, (self.height - self.defender.height), self.width, self.height)
-                if (len(target)>=2):
-                    self.canvas.create_text(450, 350,font=("Purisa", 18), text='Fin du jeu vous avez perdu !', fill='white')
-                    self.fin = 1
+            for alien in self.fleet.alien_id:
+                alien.move_in(self.canvas, self.horizontale, self.verticale)
+
+            x_max = max([a.get_x(self.canvas) for a in self.fleet.alien_id])
+            x_min = min([a.get_x(self.canvas) for a in self.fleet.alien_id])
+
+            if x_max  + 50 > self.width or x_min + 50 < 0 :   # + lageur alien
+                self.horizontale = -self.horizontale
+                self.verticale += 0.01
+
+            y = max([a.get_y(self.canvas) for a in self.fleet.alien_id])
+
+            if y > self.height - self.defender.height - 20 :
+                self.canvas.create_text(400,300,font=("Purisa", 40), text='Fin du jeu vous avez perdu !', fill='red')
+                self.fin = 1
     
     
 class SpaceInvaders(object):
     def __init__(self):
         self.root = tk.Tk()
+        self.root.geometry = ("800x600")
         self.root.title('Space Invaders')
         self.frame = tk.Frame(self.root)
         self.frame.pack(side = "top",fill = "both")
         self.game = Game(self.frame)
+        
     def play(self):
         self.game.start_animation()
         self.root.bind("<Key>", self.game.keypress)
