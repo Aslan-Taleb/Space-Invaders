@@ -14,7 +14,7 @@ class Alien(object):
     @classmethod
     def get_image(cls):
         if cls.image_alien == None:
-            cls.image_alien = tk.PhotoImage(file='alien.gif')
+            cls.image_alien = tk.PhotoImage(file='images/alien.gif')
             cls.image_width = tk.PhotoImage.width(cls.image_alien)
             cls.image_height = tk.PhotoImage.height(cls.image_alien)
         return cls.image_alien
@@ -42,7 +42,7 @@ class Fleet(object):
     @classmethod
     def get_image(cls):
         if cls.image_explosion == None:
-            cls.image_explosion = tk.PhotoImage(file='explosion.gif')
+            cls.image_explosion = tk.PhotoImage(file='images/explosion.gif')
         return cls.image_explosion
     
     def __init__(self):
@@ -127,8 +127,8 @@ class Defender:
 class Bullet():
     def __init__(self,shooter):
         self.radius = 8
-        self.color = "red"
-        self.speed = 5
+        self.color = "yellow"
+        self.speed = 10
         self.id = None
         self.shooter = shooter 
     def install_in(self,canvas):
@@ -148,21 +148,21 @@ class Game():
         self.bullet = Bullet(self.defender)
         self.width = 1280
         self.height = 960
-        self.canvas = tk.Canvas(self.frame, width=self.width,height=self.height , bg = "black")
+        self.canvas = tk.Canvas(self.frame, width=self.width,height=self.height)
         self.canvas.pack()
         self.defender.install_in(self.canvas)
         self.fleet.install_in(self.canvas)
-        self.horizontale= 5        #de combien bouge droite gauche  fleet
+        self.horizontale= 2        #de combien bouge droite gauche  fleet
         self.verticale = 0         #de combien bouge bas fleet
         self.game_over = False
-        #self.pim = tk.PhotoImage(file='background.gif')
-        #self.canvas.create_image(0,0,image=self.pim, tags="image")
+        self.pim = tk.PhotoImage(file='background.png')
+        self.canvas.create_image(0,0,image=self.pim, tags="image")
         
     def keypress(self,event):
         if (self.game_over==False and self.fleet.victory == False):
-            if event.keysym == 'Left':
+            if event.keysym == 'q' or event.keysym == 'Left' :
                 self.defender.move_in(self.canvas,-self.defender.move_delta)
-            elif event.keysym == 'Right':
+            elif event.keysym == 'd' or event.keysym == 'Right':
                 self.defender.move_in(self.canvas,self.defender.move_delta)   
             elif event.keysym == 'space':
                 self.defender.fire(self.canvas)
@@ -174,7 +174,7 @@ class Game():
                 self.fleet.explo = 0
             self.move_bullets()
             self.move_aliens_fleet()
-            self.canvas.after(10,self.animation)
+            self.canvas.after(16,self.animation)
             
     def start_animation(self): # lancement install 
         self.canvas.after(16,self.animation)        
@@ -213,6 +213,8 @@ class SpaceInvaders(object):
         self.root = tk.Tk()
         self.root.geometry = ("1280x960")
         self.root.title('Space Invaders')
+        self.root.configure(background='black')
+        self.root.resizable(width=False, height=False)
         self.frame = tk.Frame(self.root)
         self.frame.pack(side = "top",fill = "both")
         self.game = Game(self.frame)
