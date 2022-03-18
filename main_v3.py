@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import time
-
+#explosion.gif ne part pas tous le temps
 class Alien(object):
     image_alien = None
     image_width = None
@@ -24,10 +24,13 @@ class Alien(object):
         self.id = canvas.create_image(x, y, image=alien)
         
     def touched_by(self, canvas, bullet):
-        pass
+        self.alive = False
+        canvas.delete(self.id)
+        canvas.move(bullet.id, 0,-700)
     
     def move_in(self, canvas, horizontale, verticale):
         canvas.move(self.id, horizontale, verticale)
+        
     def get_x(self, canvas) :
         return canvas.coords(self.id)[0]
 
@@ -35,14 +38,25 @@ class Alien(object):
         return canvas.coords(self.id)[1]
         
 class Fleet(object):
+    image_explosion = None
+    @classmethod
+    def get_image(cls):
+        if cls.image_explosion == None:
+            cls.image_explosion = tk.PhotoImage(file='explosion.gif')
+        return cls.image_explosion
+    
     def __init__(self):
         self.aliens_lines = 5
         self.aliens_columns = 10
-        self.aliens_inner_gap = 20
+        self.aliens_inner_gap = 50
         self.alien_x_delta = 5
         self.alien_y_delta = 15
         self.alien_width = None
         self.alien_id = []
+        self.explo = 0
+        self.location_explo = None
+        self.victory = False
+        
         
     def install_in(self, canvas):
         alien = Alien()
@@ -59,16 +73,29 @@ class Fleet(object):
                 self.alien_id.append(alien)
                 
     def explosionend(self,canvas,explo):
-        pass
+        canvas.delete(explo)
                 
     def explosion(self,canvas,x, y):
-      pass
+        image_explosion = Fleet.get_image()
+        explo = canvas.create_image(x, y, image=image_explosion)
+        self.explo=1
+        self.location_explo = explo
     
     def manage_touched_aliens_by(self,canvas,bullet):
-      pass
-
-
- 
+        y= -self.alien_x_delta
+        x1, y1, x2, y2 = canvas.coords(bullet.id)
+        target = canvas.find_overlapping(x1, y1, x2, y2)
+        if (len(target)==2):
+            for alien in self.alien_id:
+                xa, ya = canvas.coords(alien.id)
+                if (xa<=x1<=xa+73 and ya<=y1<=ya+53):
+                        alien.touched_by(canvas, bullet)
+                        self.alien_id.remove(alien)
+                        self.explosion(canvas, x1, y1)
+                if len(self.alien_id)==0:
+                        canvas.create_text(640,480,font=("Purisa",50), text='VICTORY !', fill='green')
+                        self.victory = True
+                        
 class Defender:
     def __init__(self):
         self.width = 20 #longeur largeur Defender
@@ -99,7 +126,7 @@ class Defender:
    
 class Bullet():
     def __init__(self,shooter):
-        self.radius = 5
+        self.radius = 8
         self.color = "red"
         self.speed = 5
         self.id = None
@@ -132,7 +159,7 @@ class Game():
         #self.canvas.create_image(0,0,image=self.pim, tags="image")
         
     def keypress(self,event):
-        if (self.game_over==False):
+        if (self.game_over==False and self.fleet.victory == False):
             if event.keysym == 'Left':
                 self.defender.move_in(self.canvas,-self.defender.move_delta)
             elif event.keysym == 'Right':
@@ -142,6 +169,9 @@ class Game():
             
     def animation(self):
         if (self.game_over==False):
+            if (self.fleet.explo==1):
+                self.fleet.explosionend(self.canvas,self.fleet.location_explo)
+                self.fleet.explo = 0
             self.move_bullets()
             self.move_aliens_fleet()
             self.canvas.after(10,self.animation)
@@ -153,6 +183,7 @@ class Game():
     def move_bullets(self):
         for bullet in self.defender.fired_bullets:
             position_y_balle =self.canvas.coords(bullet.id)[1] #recupere y de la balle 
+            self.fleet.manage_touched_aliens_by(self.canvas, bullet)
             bullet.move_in(self.canvas)                        #animation balle qui monte
             if position_y_balle < 0:                           #si balle en dehors de l'ecran supprimer l'objet balle de la liste
                 self.canvas.delete(bullet.id)
@@ -160,15 +191,15 @@ class Game():
                 print("Une balle a etait enlevé")
                 
     def move_aliens_fleet(self):
-            for alien in self.fleet.alien_id:               #boucle dans une liste avec des objets alien
-                alien.move_in(self.canvas, self.horizontale, self.verticale)
+            for fleet in self.fleet.alien_id:               #boucle dans une liste avec des objets alien
+                fleet.move_in(self.canvas, self.horizontale, self.verticale)
 
             alien_plus_a_droite = max([a.get_x(self.canvas) for a in self.fleet.alien_id])
             alien_plus_a_gauche = min([a.get_x(self.canvas) for a in self.fleet.alien_id])
 
             if alien_plus_a_droite  + 50 > self.width or alien_plus_a_gauche - 50 < 0 :   # test fllet a la limite de l'ecran
                 self.horizontale = -self.horizontale            #on part dans l'autre sens
-                self.verticale += 0.01                         #fleet descend 
+                self.verticale += 0.01                          #fleet descend 
 
             alien_plus_bas = max([a.get_y(self.canvas) for a in self.fleet.alien_id])
 
@@ -180,7 +211,7 @@ class Game():
 class SpaceInvaders(object):
     def __init__(self):
         self.root = tk.Tk()
-        self.root.geometry = ("800x600")
+        self.root.geometry = ("1280x960")
         self.root.title('Space Invaders')
         self.frame = tk.Frame(self.root)
         self.frame.pack(side = "top",fill = "both")
