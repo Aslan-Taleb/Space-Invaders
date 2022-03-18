@@ -10,6 +10,8 @@ class Alien(object):
     def __init__(self):
         self.id = None
         self.alive = True
+        self.explo = 0
+        self.location_explo = None
     
     @classmethod
     def get_image(cls):
@@ -53,8 +55,6 @@ class Fleet(object):
         self.alien_y_delta = 15
         self.alien_width = None
         self.alien_id = []
-        self.explo = 0
-        self.location_explo = None
         self.victory = False
         
         
@@ -78,7 +78,7 @@ class Fleet(object):
     def explosion(self,canvas,x, y):
         image_explosion = Fleet.get_image()
         explo = canvas.create_image(x, y, image=image_explosion)
-        self.explo=1
+        Alien.explo=1
         self.location_explo = explo
     
     def manage_touched_aliens_by(self,canvas,bullet):
@@ -93,7 +93,7 @@ class Fleet(object):
                         self.alien_id.remove(alien)
                         self.explosion(canvas, x1, y1)
                 if len(self.alien_id)==0:
-                        canvas.create_text(640,480,font=("Purisa",50), text='VICTORY !', fill='green')
+                        canvas.create_text(640,480,font=("fonts/space_invaders.ttf",50), text='VICTORY !', fill='green')
                         self.victory = True
                         
 class Defender:
@@ -167,9 +167,9 @@ class Game():
             
     def animation(self):
         if (self.game_over==False):
-            if (self.fleet.explo==1):
-                self.fleet.explosionend(self.canvas,self.fleet.location_explo)
-                self.fleet.explo = 0
+            if (Alien.explo==1):
+                Alien.explosionend(self.canvas,Alien.location_explo)
+                Alien.explo = 0
             self.move_bullets()
             self.move_aliens_fleet()
             self.canvas.after(16,self.animation)
@@ -202,7 +202,7 @@ class Game():
             alien_plus_bas = max([a.get_y(self.canvas) for a in self.fleet.alien_id])
 
             if alien_plus_bas > self.height - 2*self.defender.height  :
-                self.canvas.create_text(640,480,font=("Purisa",50), text='GAME OVER(nul/10)', fill='red')
+                self.canvas.create_text(640,480,font=("fonts/space_invaders.ttf",50), text='GAME OVER(nul/10)', fill='red')
                 self.game_over = True
     
     
@@ -212,6 +212,8 @@ class SpaceInvaders(object):
         self.root.geometry = ("1280x960")
         self.root.title('Space Invaders')
         self.root.configure(background='black')
+        self.p1 = PhotoImage(file ='images/ship.ico')
+        self.root.iconphoto(False, self.p1)
         self.root.resizable(width=False, height=False)
         self.frame = tk.Frame(self.root)
         self.frame.pack(side = "top",fill = "both")

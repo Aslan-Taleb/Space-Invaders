@@ -96,6 +96,8 @@ class SpaceInvaders(object):
         self.root = tk.Tk()
         self.root.title('Space Invaders')
         self.frame = tk.Frame(self.root)
+        self.p1 = PhotoImage(file ='images/ship.ico')
+        self.root.iconphoto(False, self.p1)
         self.frame.pack(side = "top",fill = "both")
         self.game = Game(self.frame)
     def play(self):

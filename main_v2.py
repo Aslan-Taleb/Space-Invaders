@@ -14,7 +14,7 @@ class Alien(object):
     @classmethod
     def get_image(cls):
         if cls.image_alien == None:
-            cls.image_alien = tk.PhotoImage(file='alien.gif')
+            cls.image_alien = tk.PhotoImage(file='images/alien.gif')
             cls.image_width = tk.PhotoImage.width(cls.image_alien)
             cls.image_height = tk.PhotoImage.height(cls.image_alien)
         return cls.image_alien
@@ -99,8 +99,8 @@ class Defender:
    
 class Bullet():
     def __init__(self,shooter):
-        self.radius = 5
-        self.color = "red"
+        self.radius = 8
+        self.color = "yellow"
         self.speed = 5
         self.id = None
         self.shooter = shooter 
@@ -125,7 +125,7 @@ class Game():
         self.canvas.pack()
         self.defender.install_in(self.canvas)
         self.fleet.install_in(self.canvas)
-        self.horizontale= 5        #de combien bouge droite gauche  fleet
+        self.horizontale= 2        #de combien bouge droite gauche  fleet
         self.verticale = 0         #de combien bouge bas fleet
         self.game_over = False
         #self.pim = tk.PhotoImage(file='background.gif')
@@ -180,8 +180,12 @@ class Game():
 class SpaceInvaders(object):
     def __init__(self):
         self.root = tk.Tk()
-        self.root.geometry = ("800x600")
+        self.root.geometry = ("1280x960")
         self.root.title('Space Invaders')
+        self.root.configure(background='black')
+        self.p1 = PhotoImage(file ='images/ship.ico')
+        self.root.iconphoto(False, self.p1)
+        self.root.resizable(width=False, height=False)
         self.frame = tk.Frame(self.root)
         self.frame.pack(side = "top",fill = "both")
         self.game = Game(self.frame)
