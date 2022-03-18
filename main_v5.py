@@ -101,8 +101,9 @@ class Fleet(object):
                         self.affichage_score = canvas.create_text(100,20,font=("fonts/space_invaders.ttf", 20), text="SCORE : "+str(self.score), fill='white')
                 if len(self.alien_id)==0:
                         canvas.create_text(640,480,font=("fonts/space_invaders.ttf",50), text='VICTORY !', fill='green')
+                        winsound.PlaySound("sounds/victory_tkt.wav", winsound.SND_ASYNC)
                         self.victory = True
-                        winsound.PlaySound("sounds/shoot.wav", winsound.SND_ASYNC)
+                        
                         
                         
 class Defender:
@@ -211,7 +212,7 @@ class Game():
 
             if alien_plus_a_droite  + 50 > self.width or alien_plus_a_gauche - 50 < 0 :   # test fllet a la limite de l'ecran
                 self.horizontale = -self.horizontale            #on part dans l'autre sens
-                self.verticale += 0.01                          #fleet descend 
+                self.verticale += 0.05                        #fleet descend 
 
             alien_plus_bas = max([a.get_y(self.canvas) for a in self.fleet.alien_id])
 
