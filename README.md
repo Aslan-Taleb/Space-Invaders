@@ -6,7 +6,7 @@
 
 Compte Rendu PCO : Space Invaders
 
-#Présentation générale du programme:
+## Présentation générale du programme:
 
 Le programme se lance dans une fenêtre à fond noir ayant pour titre : “Space
 Invaders”, une flotte d’aliens composée de 5 lignes de 10 aliens est placé en haut de la
@@ -43,7 +43,7 @@ sont éliminés.
 -La classe Alien : elle initialise chaque alien et l’installe à l’endroit demandé par la classe
 Fleet et le supprime lorsqu’il est touché, elle gère également le mouvement de chaque alien.
 
-#Les difficultées rencontrée :
+## Les difficultées rencontrée :
 
 On a rencontré des difficultés avec les classes manage_touched_aliens_by et
 touched_by, on a fonctionné étapes par étapes pour résoudre les problèmes. Il fallait
@@ -57,11 +57,11 @@ De la même manière il arrive que la balle traverse un alien sans le tuer lorsq
 balle ne traverse pas le centre de l’alien, ce qu’on a pas réussi à régler malgré de
 nombreux essais.
 
-#ce qu’on aurait pu améliorer :
+## ce qu’on aurait pu améliorer :
 
 Nous avions pensé à demander le nom du joueur avant le début du jeu puis à la fin du jeu
 faire l’affichage d’un tableau des scores.
-#Conclusion :
+## Conclusion :
 Nous sommes parvenus à faire un Space Invaders jouable avec la possibilité de
 perdre ou de gagner, on a réussi à résoudre les principaux problèmes seuls les
 problèmes cités plus haut persistent.
