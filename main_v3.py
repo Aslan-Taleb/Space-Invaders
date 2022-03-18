@@ -148,15 +148,13 @@ class Game():
         self.bullet = Bullet(self.defender)
         self.width = 1280
         self.height = 960
-        self.canvas = tk.Canvas(self.frame, width=self.width,height=self.height)
+        self.canvas = tk.Canvas(self.frame, width=self.width,height=self.height,bg = "black")
         self.canvas.pack()
         self.defender.install_in(self.canvas)
         self.fleet.install_in(self.canvas)
         self.horizontale= 2        #de combien bouge droite gauche  fleet
         self.verticale = 0         #de combien bouge bas fleet
         self.game_over = False
-        self.pim = tk.PhotoImage(file='background.png')
-        self.canvas.create_image(0,0,image=self.pim, tags="image")
         
     def keypress(self,event):
         if (self.game_over==False and self.fleet.victory == False):
