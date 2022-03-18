@@ -1,6 +1,8 @@
 Space Invaders
 Compte Rendu PCO : Space Invaders
-Présentation générale du programme:
+
+**Présentation générale du programme:
+
 Le programme se lance dans une fenêtre à fond noir ayant pour titre : “Space
 Invaders”, une flotte d’aliens composée de 5 lignes de 10 aliens est placé en haut de la
 fenêtre et se déplace de droite à gauche et du haut vers le bas.
@@ -17,22 +19,27 @@ balles à la fois, une fois cette limite atteinte, il peut de nouveau tirer lors
 la zone de jeu ou qu’elle touche un ennemi. Le jeu se termine si le joueur tue tous les aliens
 (victoire du joueur) ou si un alien arrive au même niveau que le defender (défaite du joueur).
 Présentation détaillée des différentes classes et de leurs fonctions:
-La classe SpaceInvaders : elle sert à initialiser le canvas et installer la classe Game, elle
+
+-La classe SpaceInvaders : elle sert à initialiser le canvas et installer la classe Game, elle
 permet également de lancer les animations et activer l’utilisation des touches du clavier.
 La classe Game : elle initialise les différentes parties du jeu notamment la fenêtre et la flotte.
 C’est dans cette classe que les touches du clavier sont associées à des actions et que les
 différentes animations ainsi que bruitages sont initialisées et lancées.
 La classe Bullet : elle initialise une balle et la place sur le canvas puis la fait se déplacer (elle
 est appelée par le defender).
-La classe Defender : elle initialise le defender, le place en bas de la fenêtre au milieu, elle
+
+-La classe Defender : elle initialise le defender, le place en bas de la fenêtre au milieu, elle
 gère le déplacement du defender et la création de balles dans la limite imposée.
 La classe Fleet : elle initialise le nombre de lignes et de colonnes d’aliens puis elle installe le
 nombre requis d’aliens sur le canvas (via la classe Alien). Elle gère la collision entre alien et
 balle et l’animation d ‘explosion. Elle affiche un message de victoire lorsque tous les aliens
 sont éliminés.
-La classe Alien : elle initialise chaque alien et l’installe à l’endroit demandé par la classe
+
+-La classe Alien : elle initialise chaque alien et l’installe à l’endroit demandé par la classe
 Fleet et le supprime lorsqu’il est touché, elle gère également le mouvement de chaque alien.
-Les difficultées rencontrée :
+
+**Les difficultées rencontrée :
+
 On a rencontré des difficultés avec les classes manage_touched_aliens_by et
 touched_by, on a fonctionné étapes par étapes pour résoudre les problèmes. Il fallait
 réussir à trouver les coordonnées des aliens qui bougeaient. Ensuite on réussissait à
@@ -44,10 +51,12 @@ mais que nous n’avons malheureusement pas réussi à régler.
 De la même manière il arrive que la balle traverse un alien sans le tuer lorsque la
 balle ne traverse pas le centre de l’alien, ce qu’on a pas réussi à régler malgré de
 nombreux essais.
-ce qu’on aurait pu améliorer :
+
+**ce qu’on aurait pu améliorer :
+
 Nous avions pensé à demander le nom du joueur avant le début du jeu puis à la fin du jeu
 faire l’affichage d’un tableau des scores.
-Conclusion :
+**Conclusion :
 Nous sommes parvenus à faire un Space Invaders jouable avec la possibilité de
 perdre ou de gagner, on a réussi à résoudre les principaux problèmes seuls les
 problèmes cités plus haut persistent.
