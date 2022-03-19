@@ -1,9 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import time
-
-
- 
+#defender + tir
 class Defender:
     def __init__(self):
         self.width = 20 #longeur largeur Defender
@@ -96,7 +94,7 @@ class SpaceInvaders(object):
         self.root = tk.Tk()
         self.root.title('Space Invaders')
         self.frame = tk.Frame(self.root)
-        self.p1 = PhotoImage(file ='images/ship.ico')
+        self.p1 = PhotoImage(file ='images/ufo.png')
         self.root.iconphoto(False, self.p1)
         self.frame.pack(side = "top",fill = "both")
         self.game = Game(self.frame)

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import time
-
+#sans collision
 class Alien(object):
     image_alien = None
     image_width = None
@@ -183,7 +183,7 @@ class SpaceInvaders(object):
         self.root.geometry = ("1280x960")
         self.root.title('Space Invaders')
         self.root.configure(background='black')
-        self.p1 = PhotoImage(file ='images/ship.ico')
+        self.p1 = PhotoImage(file ='images/ufo.png')
         self.root.iconphoto(False, self.p1)
         self.root.resizable(width=False, height=False)
         self.frame = tk.Frame(self.root)

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import time
-#explosion.gif ne part pas tous le temps
+#Sans "amelioration"
 class Alien(object):
     image_alien = None
     image_width = None
@@ -10,8 +10,6 @@ class Alien(object):
     def __init__(self):
         self.id = None
         self.alive = True
-        self.explo = 0
-        self.location_explo = None
     
     @classmethod
     def get_image(cls):
@@ -55,7 +53,11 @@ class Fleet(object):
         self.alien_y_delta = 15
         self.alien_width = None
         self.alien_id = []
+        self.explo = 0
+        self.location_explo = None
         self.victory = False
+        self.score = 0
+        self.affichage_score = None
         
         
     def install_in(self, canvas):
@@ -78,7 +80,7 @@ class Fleet(object):
     def explosion(self,canvas,x, y):
         image_explosion = Fleet.get_image()
         explo = canvas.create_image(x, y, image=image_explosion)
-        Alien.explo=1
+        self.explo=1
         self.location_explo = explo
     
     def manage_touched_aliens_by(self,canvas,bullet):
@@ -92,6 +94,9 @@ class Fleet(object):
                         alien.touched_by(canvas, bullet)
                         self.alien_id.remove(alien)
                         self.explosion(canvas, x1, y1)
+                        canvas.delete(self.affichage_score)   #mis a jour du score
+                        self.score = self.score + 10            #ajout du score
+                        self.affichage_score = canvas.create_text(100,20,font=("fonts/space_invaders.ttf", 20), text="SCORE : "+str(self.score), fill='white')
                 if len(self.alien_id)==0:
                         canvas.create_text(640,480,font=("fonts/space_invaders.ttf",50), text='VICTORY !', fill='green')
                         self.victory = True
@@ -167,9 +172,9 @@ class Game():
             
     def animation(self):
         if (self.game_over==False):
-            if (Alien.explo==1):
-                Alien.explosionend(self.canvas,Alien.location_explo)
-                Alien.explo = 0
+            if (self.fleet.explo==1):
+                self.fleet.explosionend(self.canvas,self.fleet.location_explo)
+                self.fleet.explo = 0
             self.move_bullets()
             self.move_aliens_fleet()
             self.canvas.after(16,self.animation)
@@ -212,7 +217,7 @@ class SpaceInvaders(object):
         self.root.geometry = ("1280x960")
         self.root.title('Space Invaders')
         self.root.configure(background='black')
-        self.p1 = PhotoImage(file ='images/ship.ico')
+        self.p1 = PhotoImage(file ='images/ufo.png')
         self.root.iconphoto(False, self.p1)
         self.root.resizable(width=False, height=False)
         self.frame = tk.Frame(self.root)
