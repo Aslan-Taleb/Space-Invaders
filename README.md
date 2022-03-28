@@ -47,9 +47,7 @@ Fleet et le supprime lorsqu’il est touché, elle gère également le mouvement
 
 On a rencontré des difficultés avec les classes manage_touched_aliens_by et
 touched_by, on a fonctionné étapes par étapes pour résoudre les problèmes. Il fallait
-réussir à trouver les coordonnées des aliens qui bougeaient. Ensuite on réussissait à
-supprimer un alien mais quand on voulait supprimer la bullet ça affichait des
-problèmes car le move_bullets continuait à bouger une bullet qui n’existait plus.
+réussir à trouver les coordonnées des aliens qui bougeaient.
 Lors de l’animation de l’explosion, il arrive que l’image de l’explosion ne se supprime
 pas notamment lorsqu'il y a beaucoup de choses à gérer, ce qui est assez gênant
 mais que nous n’avons malheureusement pas réussi à régler.
