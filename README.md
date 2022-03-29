@@ -6,6 +6,8 @@
 
 Compte Rendu PCO : Space Invaders
 
+Aslan Taleb // Abdelaziz Amil
+
 ## Présentation générale du programme:
 
 Le programme se lance dans une fenêtre à fond noir ayant pour titre : “Space

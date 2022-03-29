@@ -4,6 +4,10 @@ import pygame #uniquement pour le son
 
 
 
+<<<<<<< HEAD:main_version_pygame.py
+=======
+#Son + Alien Image
+>>>>>>> main:main.py
 class Alien(object):
     image_alien = None
     image_width = None
@@ -26,9 +30,14 @@ class Alien(object):
         self.id = canvas.create_image(x, y, image=alien)
         
     def touched_by(self, canvas, bullet):
+<<<<<<< HEAD:main_version_pygame.py
         canvas.delete(self.id) #suppression de l'alien
         pygame.mixer.music.load("sounds/explosion.wav")
         pygame.mixer.music.play()
+=======
+        self.alive = False 
+        canvas.delete(self.id) #suppression de l'alien
+>>>>>>> main:main.py
         canvas.move(bullet.id, 0,-700)
     
     def move_in(self, canvas, horizontale, verticale):
@@ -41,6 +50,16 @@ class Alien(object):
         return canvas.coords(self.id)[1] #recuperation coordonnée en ordonnée de l'alien
         
 class Fleet(object):
+<<<<<<< HEAD:main_version_pygame.py
+=======
+    image_explosion = None
+    @classmethod
+    def get_image(cls): #image explosion
+        if cls.image_explosion == None:
+            cls.image_explosion = tk.PhotoImage(file='images/explosion.gif')
+        return cls.image_explosion
+    
+>>>>>>> main:main.py
     def __init__(self):
         self.aliens_lines = 5 #5 lignes
         self.aliens_columns = 10 #de 10 aliens
@@ -71,8 +90,20 @@ class Fleet(object):
                 self.alien_id.append(alien) #ajout dans liste d'un alien
             
                 
+<<<<<<< HEAD:main_version_pygame.py
 
                 
+=======
+    def explosionend(self,canvas,explo): #suppr de l'image explo
+        canvas.delete(explo)
+                
+    def explosion(self,canvas,x, y): #crea de l'image explo + son
+        winsound.PlaySound("sounds/explosion.wav", winsound.SND_ASYNC)
+        image_explosion = Fleet.get_image()
+        explo = canvas.create_image(x, y, image=image_explosion)
+        self.explo=1
+        self.location_explo = explo
+>>>>>>> main:main.py
     
     def manage_touched_aliens_by(self,canvas,bullet):
         image_width = 64
@@ -86,6 +117,10 @@ class Fleet(object):
                 if (pos_x_alien<=pos_x1_balle<=pos_x_alien+image_width and pos_y_alien<=pos_y1_balle<=pos_y_alien+image_height):#si la balle atteint les coords de l'image de l'alien
                         alien.touched_by(canvas, bullet) #suppression du canvas de l'alien + move de la balle
                         self.alien_id.remove(alien) #suppr de l'alien de la liste
+<<<<<<< HEAD:main_version_pygame.py
+=======
+                        self.explosion(canvas, pos_x1_balle, pos_y1_balle) #crea de l'explo
+>>>>>>> main:main.py
                         canvas.delete(self.affichage_score)   #mis a jour du score
                         self.score = self.score + 10            #ajout du score
                         self.affichage_score = canvas.create_text(100,20,font=("Rockwell", 20), text="SCORE : "+str(self.score), fill='white')
@@ -238,3 +273,7 @@ class SpaceInvaders(object):
               
 
 SpaceInvaders().play()
+<<<<<<< HEAD:main_version_pygame.py
+=======
+
+>>>>>>> main:main.py
