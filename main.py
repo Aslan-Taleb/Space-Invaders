@@ -74,7 +74,7 @@ class Fleet(object):
                 alien = Alien()         #creation objet alien
                 self.alien_width = alien.image_width        
                 alien.install_in(canvas, x, y)  
-                self.alien_id.append(alien)
+                self.alien_id.append(alien) #ajout dans liste d'un alien
             
                 
     def explosionend(self,canvas,explo): #suppr de l'image explo
