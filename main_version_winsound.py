@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import *
 import winsound
-import time
 
-#Son + defender Image
+
 class Alien(object):
     image_alien = None
     image_width = None
@@ -21,41 +20,34 @@ class Alien(object):
             cls.image_height = tk.PhotoImage.height(cls.image_alien)
         return cls.image_alien
     
-    def install_in(self, canvas, x, y):
+    def install_in(self, canvas, x, y): #creation de l'alien
         alien = Alien.get_image()
         self.id = canvas.create_image(x, y, image=alien)
         
     def touched_by(self, canvas, bullet):
-        self.alive = False
-        canvas.delete(self.id)
+        canvas.delete(self.id) #suppression de l'alien
+        winsound.PlaySound("sounds/explosion.wav", winsound.SND_ASYNC)
         canvas.move(bullet.id, 0,-700)
     
     def move_in(self, canvas, horizontale, verticale):
         canvas.move(self.id, horizontale, verticale)
         
     def get_x(self, canvas) :
-        return canvas.coords(self.id)[0]
+        return canvas.coords(self.id)[0] #recuperation coordonnée en abscisse de l'alien
 
     def get_y(self, canvas) :
-        return canvas.coords(self.id)[1]
+        return canvas.coords(self.id)[1] #recuperation coordonnée en ordonnée de l'alien
         
 class Fleet(object):
-    image_explosion = None
-    @classmethod
-    def get_image(cls):
-        if cls.image_explosion == None:
-            cls.image_explosion = tk.PhotoImage(file='images/explosion.gif')
-        return cls.image_explosion
-    
     def __init__(self):
-        self.aliens_lines = 5
-        self.aliens_columns = 10
+        self.aliens_lines = 5 #5 lignes
+        self.aliens_columns = 10 #de 10 aliens
         self.aliens_inner_gap = 50
         self.alien_x_delta = 5
         self.alien_y_delta = 15
         self.alien_width = None
-        self.alien_id = []
-        self.explo = 0
+        self.alien_id = [] #liste vide d'alien
+        self.explo = 0 
         self.location_explo = None
         self.victory = False
         self.score = 0
@@ -66,50 +58,42 @@ class Fleet(object):
         alien = Alien()
         Alien.get_image()
         y= 0
-        for line in range (self.aliens_lines):
+        for line in range (self.aliens_lines): #deplace y de la hauteur d'un alien pour changer de ligne
             y = y + Alien.image_height 
             x = 0
-            for column in range (self.aliens_columns):
+            for column in range (self.aliens_columns): #creation de chaques aliens d'une column a l'autre sur une ligne
                 x = x + Alien.image_width
                 alien = Alien()         #creation objet alien
                 self.alien_width = alien.image_width        
                 alien.install_in(canvas, x, y)  
-                self.alien_id.append(alien)
+                self.alien_id.append(alien) #ajout dans liste d'un alien
             
                 
-    def explosionend(self,canvas,explo):
-        canvas.delete(explo)
+
                 
-    def explosion(self,canvas,x, y):
-        winsound.PlaySound("sounds/explosion.wav", winsound.SND_ASYNC)
-        image_explosion = Fleet.get_image()
-        explo = canvas.create_image(x, y, image=image_explosion)
-        self.explo=1
-        self.location_explo = explo
     
     def manage_touched_aliens_by(self,canvas,bullet):
         image_width = 64
         image_height = 64
         
-        pos_x1_balle, pos_y1_balle, pos_x2_balle, pos_y2_balle = canvas.coords(bullet.id)
+        pos_x1_balle, pos_y1_balle, pos_x2_balle, pos_y2_balle = canvas.coords(bullet.id) #recup coords de la balle
         target = canvas.find_overlapping(pos_x1_balle, pos_y1_balle, pos_x2_balle, pos_y2_balle)
         if (len(target)==2):
             for alien in self.alien_id:
                 pos_x_alien, pos_y_alien = canvas.coords(alien.id)
-                if (pos_x_alien<=pos_x1_balle<=pos_x_alien+image_width and pos_y_alien<=pos_y1_balle<=pos_y_alien+image_height):
-                        alien.touched_by(canvas, bullet)
-                        self.alien_id.remove(alien)
-                        self.explosion(canvas, pos_x1_balle, pos_y1_balle)
+                if (pos_x_alien<=pos_x1_balle<=pos_x_alien+image_width and pos_y_alien<=pos_y1_balle<=pos_y_alien+image_height):#si la balle atteint les coords de l'image de l'alien
+                        alien.touched_by(canvas, bullet) #suppression du canvas de l'alien + move de la balle
+                        self.alien_id.remove(alien) #suppr de l'alien de la liste
                         canvas.delete(self.affichage_score)   #mis a jour du score
                         self.score = self.score + 10            #ajout du score
                         self.affichage_score = canvas.create_text(100,20,font=("Rockwell", 20), text="SCORE : "+str(self.score), fill='white')
-                if len(self.alien_id)==0:
+                if len(self.alien_id)==0: #si liste d'alien vide creation de l'ecran de Victoire + Son
                         canvas.create_text(640,480,font=("fonts/space_invaders.ttf",50), text='VICTORY !', fill='green')
+                        canvas.create_text(640,600,font=("fonts/space_invaders.ttf",30), text=" Votre Score est de : "+str(self.score), fill='white')
+                        canvas.delete(self.affichage_score)   #mis a jour du score
                         winsound.PlaySound("sounds/victory.wav", winsound.SND_ASYNC)
                         self.victory = True
-                        
-                        
-                        
+                                             
 class Defender:
     def __init__(self):
         self.width = 20 #longeur largeur Defender
@@ -144,7 +128,7 @@ class Bullet():
     def __init__(self,shooter):
         self.radius = 8
         self.color = "blue"
-        self.speed = 10
+        self.speed = 10 #vitesse de la balle
         self.id = None
         self.shooter = shooter 
     def install_in(self,canvas):
@@ -172,7 +156,7 @@ class Game():
         self.verticale = 0       #de combien bouge bas fleet
         self.game_over = False
         
-    def keypress(self,event):
+    def keypress(self,event): # evenement à la pression des touches gauche droite ou q d et espace
         if (self.game_over==False and self.fleet.victory == False):
             if event.keysym == 'q' or event.keysym == 'Left' :
                 self.defender.move_in(self.canvas,-self.defender.move_delta)
@@ -184,9 +168,6 @@ class Game():
     def animation(self):
         
        if (self.game_over==False):
-            if (self.fleet.explo==1):
-                self.fleet.explosionend(self.canvas,self.fleet.location_explo)
-                self.fleet.explo = 0
             self.move_bullets()
             self.move_aliens_fleet()
             self.canvas.after(16,self.animation)
@@ -211,9 +192,9 @@ class Game():
             alien_plus_a_droite = max([a.get_x(self.canvas) for a in self.fleet.alien_id])
             alien_plus_a_gauche = min([a.get_x(self.canvas) for a in self.fleet.alien_id])
 
-            if alien_plus_a_droite  + 50 > self.width or alien_plus_a_gauche - 50 < 0 :   # test fllet a la limite de l'ecran
+            if alien_plus_a_droite  + 50 > self.width or alien_plus_a_gauche - 50 < 0 :   # test fleet a la limite de l'ecran
                 self.horizontale = -self.horizontale            #on part dans l'autre sens
-                self.verticale += 0.05                   #fleet descend 
+                self.verticale += 0.1                   #fleet descend 
 
             alien_plus_bas = max([a.get_y(self.canvas) for a in self.fleet.alien_id])
 
@@ -247,5 +228,3 @@ class SpaceInvaders(object):
               
 
 SpaceInvaders().play()
-
-
